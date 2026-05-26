@@ -1,0 +1,10 @@
+*.ipynb diff=jupyter notebook
+*.csv text eol=crlf
+*.xlsx binary
+*.png binary
+*.jpg binary
+*.py text eol=crlf diff=python
+*.html text eol=crlf
+*.md text eol=crlf
+*.txt text eol=crlf
+*.json text eol=crlf

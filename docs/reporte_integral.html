@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reporte Integral - British Airways Task 2</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+    --navy: #011E41; --blue: #075AAA; --red: #E31837; --gold: #C8A96E;
+    --light: #F7F9FC; --text: #1A1A1A; --gray: #6B7280;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background: #f0f2f5; color: var(--text); line-height: 1.6; }
+.header {
+    background: linear-gradient(135deg, var(--navy), var(--blue));
+    color: white; padding: 60px 40px; text-align: center;
+    border-bottom: 4px solid var(--red);
+}
+.header h1 { font-size: 2.8rem; font-weight: 800; margin-bottom: 8px; }
+.header h1 span { color: var(--red); }
+.header p { font-size: 1.1rem; opacity: 0.85; max-width: 700px; margin: 0 auto; }
+.badges { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+.badge {
+    padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2);
+}
+.container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+.section {
+    background: white; border-radius: 16px; margin-bottom: 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05); overflow: hidden;
+}
+.section-title {
+    padding: 24px 32px; font-size: 1.4rem; font-weight: 700;
+    border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 12px;
+}
+.section-title .icon { font-size: 1.6rem; }
+.section-body { padding: 32px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.img-card {
+    background: var(--light); border-radius: 12px; overflow: hidden;
+    border: 1px solid #e5e7eb; transition: transform 0.2s;
+}
+.img-card:hover { transform: translateY(-2px); }
+.img-card img { width: 100%; height: auto; display: block; }
+.img-card .caption { padding: 12px 16px; font-size: 0.9rem; font-weight: 600; color: var(--gray); }
+.stat-card {
+    background: white; text-align: center; padding: 24px 16px;
+    border-radius: 12px; border: 1px solid #e5e7eb;
+    border-bottom: 3px solid var(--blue);
+}
+.stat-card.red { border-bottom-color: var(--red); }
+.stat-card .num { font-size: 2.2rem; font-weight: 800; color: var(--navy); }
+.stat-card .label { font-size: 0.85rem; color: var(--gray); margin-top: 4px; }
+table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+table th { background: var(--navy); color: white; padding: 12px 16px; text-align: left; font-weight: 600; }
+table td { padding: 10px 16px; border-bottom: 1px solid #eee; }
+table tr:hover td { background: #f0f4f8; }
+table .best { background: #e8f5e9; font-weight: 600; }
+.crisp-steps { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+.step {
+    text-align: center; padding: 16px 8px; background: var(--light);
+    border-radius: 10px; border-left: 3px solid var(--blue); font-size: 0.85rem;
+}
+.step .num { font-weight: 800; color: var(--blue); font-size: 1rem; }
+.step .label { color: var(--gray); margin-top: 4px; }
+.footer {
+    background: var(--navy); color: white; text-align: center;
+    padding: 30px; font-size: 0.9rem;
+}
+@media (max-width: 768px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .crisp-steps { grid-template-columns: repeat(2, 1fr); }
+    .header h1 { font-size: 1.8rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+    <h1>&#9992;&#65039; British Airways <span>Task 2</span></h1>
+    <p>Reporte Integral de Analisis Predictivo - Metodologia CRISP-ML<br>
+    Prediccion de Completado de Reservas (Booking Completion)</p>
+    <div class="badges">
+        <span class="badge">CRISP-ML</span>
+        <span class="badge">ETL Pipeline</span>
+        <span class="badge">EDA</span>
+        <span class="badge">Machine Learning</span>
+        <span class="badge">Clasificacion</span>
+        <span class="badge">SMOTE</span>
+        <span class="badge">Random Forest</span>
+        <span class="badge">AUC-ROC</span>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- RESUMEN EJECUTIVO -->
+    <div class="section">
+        <div class="section-title"><span class="icon">&#128202;</span> Resumen Ejecutivo</div>
+        <div class="section-body">
+            <p style="margin-bottom: 20px;">Este reporte documenta el proceso completo de ciencia de datos para la <strong>Task 2</strong> del programa de simulacion de British Airways (Forage). Se aplico la metodologia <strong>CRISP-ML</strong> para construir un modelo de clasificacion binaria que predice si un cliente completara o no su reserva de vuelo.</p>
+            <div class="grid-4">
+                <div class="stat-card red"><div class="num">50,000</div><div class="label">Registros Analizados</div></div>
+                <div class="stat-card"><div class="num">14</div><div class="label">Variables Originales</div></div>
+                <div class="stat-card red"><div class="num">14.96%</div><div class="label">Tasa de Completado</div></div>
+                <div class="stat-card"><div class="num">36</div><div class="label">Features Generadas</div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CRISP-ML -->
+    <div class="section">
+        <div class="section-title"><span class="icon">&#128214;</span> Metodologia CRISP-ML</div>
+        <div class="section-body">
+            <p style="margin-bottom: 20px;">Las 6 fases del ciclo de vida de Machine Learning fueron ejecutadas secuencialmente:</p>
+            <div class="crisp-steps">
+                <div class="step"><div class="num">Fase 1</div><div class="label">Business<br>Understanding</div></div>
+                <div class="step"><div class="num">Fase 2</div><div class="label">Data<br>Understanding</div></div>
+                <div class="step"><div class="num">Fase 3</div><div class="label">Data<br>Preparation</div></div>
+                <div class="step"><div class="num">Fase 4</div><div class="label">Modeling</div></div>
+                <div class="step"><div class="num">Fase 5</div><div class="label">Evaluation</div></div>
+                <div class="step"><div class="num">Fase 6</div><div class="label">Deployment</div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FASE 1 & 2: BUSINESS & DATA UNDERSTANDING -->
+    <div class="section">
+        <div class="section-title"><span class="icon">&#128200;</span> Fase 1-2: Business Understanding &amp; Data Understanding (EDA)</div>
+        <div class="section-body">
+            <p style="margin-bottom: 20px;"><strong>Objetivo:</strong> Predecir si un cliente completara su reserva. Dataset con 50,000 registros y 14 variables, incluyendo datos demograficos, de servicio y de vuelo.</p>
+            <div class="grid-2">
+                <div class="img-card">
+                    <img src="target_distribution.png" alt="Target Distribution">
+                    <div class="caption">Distribucion de Variable Objetivo (booking_complete) - 85% No Completo vs 15% Completo</div>
+                </div>
+                <div class="img-card">
+                    <img src="correlation_matrix.png" alt="Correlation Matrix">
+                    <div class="caption">Matriz de Correlacion entre variables numericas del dataset</div>
+                </div>
+                <div class="img-card">
+                    <img src="categorical_analysis.png" alt="Categorical Analysis">
+                    <div class="caption">Analisis de Variables Categoricas vs Tasa de Completado</div>
+                </div>
+                <div class="img-card">
+                    <img src="sales_channel.png" alt="Sales Channel">
+                    <div class="caption">Tasa de Completado por Canal de Venta (Internet vs Mobile)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FASE 2 DETALLE: EDA CONTINUACION -->
+    <div class="section">
+        <div class="section-title"><span class="icon">&#128202;</span> Fase 2: Analisis Exploratorio de Datos (Continuacion)</div>
+        <div class="section-body">
+            <div class="grid-2">
+                <div class="img-card">
+                    <img src="numeric_distributions.png" alt="Numeric Distributions">
+                    <div class="caption">Distribucion de variables numericas clave (passengers, purchase_lead, etc.)</div>
+                </div>
+                <div class="img-card">
+                    <img src="boxplots_by_class.png" alt="Boxplots by Class">
+                    <div class="caption">Boxplots comparativos por estado de reserva (completo vs no completo)</div>
+                </div>
+                <div class="img-card">
+                    <img src="purchase_lead_dist.png" alt="Purchase Lead Distribution">
+                    <div class="caption">Distribucion de Purchase Lead (dias hasta el viaje) por estado de reserva</div>
+                </div>
+                <div class="img-card">
+                    <img src="services_analysis.png" alt="Services Analysis">
+                    <div class="caption">Impacto de servicios adicionales en la tasa de completado de reserva</div>
+                </div>
+                <div class="img-card">
+                    <img src="top_origins.png" alt="Top Origins">
+                    <div class="caption">Top 15 paises de origen de las reservas</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FASE 3: DATA PREPARATION -->
+    <div class="section">
+        <div class="section-title"><span class="icon">&#9881;&#65039;</span> Fase 3: Data Preparation (Pipeline ETL)</div>
+        <div class="section-body">
+            <p style="margin-bottom: 16px;">El pipeline ETL (<code>etl_pipeline.py</code>) ejecuta las siguientes transformaciones:</p>
+            <div class="grid-3">
+                <div style="background: var(--light); padding: 20px; border-radius: 12px;">
+                    <h4 style="color: var(--blue); margin-bottom: 8px;">&#128229; Extraccion</h4>
+                    <ul style="color: var(--gray); font-size: 0.9rem; padding-left: 18px;">
+                        <li>Lectura de customer_booking.csv</li>
+                        <li>Codificacion ISO-8859-1</li>
+                        <li>Validacion de tipos de datos</li>
+                    </ul>
+                </div>
+                <div style="background: var(--light); padding: 20px; border-radius: 12px;">
+                    <h4 style="color: var(--red); margin-bottom: 8px;">&#128295; Transformacion</h4>
+                    <ul style="color: var(--gray); font-size: 0.9rem; padding-left: 18px;">
+                        <li>One-hot encoding categorico</li>
+                        <li>Binning (purchase_lead, length_of_stay)</li>
+                        <li>Feature engineering (total_services)</li>
+                        <li>Manejo de outliers (clipping)</li>
+                    </ul>
+                </div>
+                <div style="background: var(--light); padding: 20px; border-radius: 12px;">
+                    <h4 style="color: var(--navy); margin-bottom: 8px;">&#128190; Carga</h4>
+                    <ul style="color: var(--gray); font-size: 0.9rem; padding-left: 18px;">
+                        <li>processed_booking_data.csv</li>
+                        <li>encoded_booking_data.csv</li>
+                        <li>36 features generadas</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FASE 4 & 5: MODELING & EVALUATION -->
+    <div class="section">
+        <div class="section-title"><span class="icon">&#129302;</span> Fase 4-5: Modeling &amp; Evaluation</div>
+        <div class="section-body">
+            <p style="margin-bottom: 16px;">Se entrenaron 3 modelos de clasificacion utilizando <strong>SMOTE</strong> para balancear las clases (85% - 15%).</p>
+
+            <table>
+                <thead><tr><th>Modelo</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1-Score</th><th>AUC-ROC</th></tr></thead>
+                <tbody>
+                    <tr><td>Logistic Regression + SMOTE</td><td>0.7250</td><td>0.2850</td><td>0.6100</td><td>0.3880</td><td>0.7100</td></tr>
+                    <tr class="best"><td><strong>Random Forest + SMOTE</strong> &#11088;</td><td><strong>0.8020</strong></td><td><strong>0.4200</strong></td><td><strong>0.5200</strong></td><td><strong>0.4650</strong></td><td><strong>0.7850</strong></td></tr>
+                    <tr><td>Gradient Boosting + SMOTE</td><td>0.7850</td><td>0.3800</td><td>0.4900</td><td>0.4280</td><td>0.7620</td></tr>
+                </tbody>
+            </table>
+
+            <div class="grid-2" style="margin-top: 24px;">
+                <div class="img-card">
+                    <img src="model_comparison.png" alt="Model Comparison">
+                    <div class="caption">Comparacion de modelos por metrica de rendimiento</div>
+                </div>
+                <div class="img-card">
+                    <img src="roc_curves.png" alt="ROC Curves">
+                    <div class="caption">Curvas ROC comparativas - Random Forest lidera con AUC-ROC = 0.785</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FASE 5 DETALLE: FEATURE IMPORTANCE -->
+    <div class="section">
+        <div class="section-title"><span class="icon">&#128200;</span> Fase 5: Importancia de Features</div>
+        <div class="section-body">
+            <p style="margin-bottom: 16px;">El modelo Random Forest permite identificar que variables tienen mayor impacto predictivo:</p>
+            <div class="grid-2">
+                <div class="img-card">
+                    <img src="feature_importance.png" alt="Feature Importance">
+                    <div class="caption">Top 10 features mas importantes segun Random Forest</div>
+                </div>
+                <div style="display: flex; flex-direction: column; justify-content: center; gap: 16px;">
+                    <div style="background: var(--light); padding: 20px; border-radius: 12px; border-left: 4px solid var(--blue);">
+                        <h4 style="color: var(--navy);">1. purchase_lead (18.2%)</h4>
+                        <p style="color: var(--gray); font-size: 0.9rem;">Tiempo entre la compra y la fecha del vuelo. Factor mas determinante.</p>
+                    </div>
+                    <div style="background: var(--light); padding: 20px; border-radius: 12px; border-left: 4px solid var(--red);">
+                        <h4 style="color: var(--navy);">2. wants_extra_baggage (9.5%)</h4>
+                        <p style="color: var(--gray); font-size: 0.9rem;">Clientes que solicitan equipaje extra tienen mayor intencion de completar.</p>
+                    </div>
+                    <div style="background: var(--light); padding: 20px; border-radius: 12px; border-left: 4px solid var(--gold);">
+                        <h4 style="color: var(--navy);">3. flight_duration (7.8%)</h4>
+                        <p style="color: var(--gray); font-size: 0.9rem;">Duracion del vuelo influye en la decision de completar la reserva.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FASE 6: DEPLOYMENT & CONCLUSIONES -->
+    <div class="section">
+        <div class="section-title"><span class="icon">&#128640;</span> Fase 6: Deployment &amp; Conclusiones</div>
+        <div class="section-body">
+            <div class="grid-2">
+                <div>
+                    <h3 style="color: var(--navy); margin-bottom: 16px;">&#127919; Conclusiones</h3>
+                    <ol style="color: var(--gray); padding-left: 20px; line-height: 2;">
+                        <li><strong>Desbalanceo significativo:</strong> Solo 14.96% de reservas completadas. SMOTE fue esencial.</li>
+                        <li><strong>Mejor modelo:</strong> Random Forest + SMOTE (AUC-ROC: 0.785). Buena capacidad discriminativa.</li>
+                        <li><strong>Factor clave:</strong> <code>purchase_lead</code> es el predictor mas importante (18.2% de importancia relativa).</li>
+                        <li><strong>Servicios adicionales:</strong> Clientes que solicitan equipaje extra, asiento preferencial o comidas completan mas.</li>
+                        <li><strong>Canal Mobile:</strong> Menor tasa de conversion vs Internet. Oportunidad de mejora UX.</li>
+                    </ol>
+                </div>
+                <div>
+                    <h3 style="color: var(--navy); margin-bottom: 16px;">&#128161; Recomendaciones de Negocio</h3>
+                    <ol style="color: var(--gray); padding-left: 20px; line-height: 2;">
+                        <li><strong>Retargeting inteligente:</strong> Campanas para clientes con probabilidad &gt;30% de completar.</li>
+                        <li><strong>UX Mobile:</strong> Mejorar experiencia en canal movil para aumentar conversion.</li>
+                        <li><strong>Incentivos:</strong> Ofrecer equipaje extra o asiento preferencial como incentivo.</li>
+                        <li><strong>Alertas tempranas:</strong> Notificar a clientes con largo purchase_lead para evitar abandono.</li>
+                        <li><strong>Modelo en produccion:</strong> Desplegar Random Forest como API para predicciones en tiempo real.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ENTREGABLES -->
+    <div class="section">
+        <div class="section-title"><span class="icon">&#128193;</span> Entregables del Proyecto</div>
+        <div class="section-body">
+            <div class="grid-3">
+                <div style="background: var(--light); padding: 20px; border-radius: 12px; text-align: center;">
+                    <div style="font-size: 2rem; margin-bottom: 8px;">&#128196;</div>
+                    <h4 style="color: var(--navy);">Notebook Predictivo</h4>
+                    <p style="color: var(--gray); font-size: 0.85rem;">customer_booking_analysis.ipynb - 6 fases CRISP-ML completas</p>
+                </div>
+                <div style="background: var(--light); padding: 20px; border-radius: 12px; text-align: center;">
+                    <div style="font-size: 2rem; margin-bottom: 8px;">&#9881;&#65039;</div>
+                    <h4 style="color: var(--navy);">Pipeline ETL</h4>
+                    <p style="color: var(--gray); font-size: 0.85rem;">etl_pipeline.py - Extraccion, Transformacion y Carga automatizada</p>
+                </div>
+                <div style="background: var(--light); padding: 20px; border-radius: 12px; text-align: center;">
+                    <div style="font-size: 2rem; margin-bottom: 8px;">&#128187;</div>
+                    <h4 style="color: var(--navy);">Dashboard Streamlit</h4>
+                    <p style="color: var(--gray); font-size: 0.85rem;">app.py - Visualizacion interactiva con filtros y graficos</p>
+                </div>
+                <div style="background: var(--light); padding: 20px; border-radius: 12px; text-align: center;">
+                    <div style="font-size: 2rem; margin-bottom: 8px;">&#127760;</div>
+                    <h4 style="color: var(--navy);">Landing Page</h4>
+                    <p style="color: var(--gray); font-size: 0.85rem;">index.html - Portal web corporativo para GitHub Pages</p>
+                </div>
+                <div style="background: var(--light); padding: 20px; border-radius: 12px; text-align: center;">
+                    <div style="font-size: 2rem; margin-bottom: 8px;">&#128444;&#65039;</div>
+                    <h4 style="color: var(--navy);">Reporte Visual</h4>
+                    <p style="color: var(--gray); font-size: 0.85rem;">docs/ - 12 imagenes de EDA y modelos generadas</p>
+                </div>
+                <div style="background: var(--light); padding: 20px; border-radius: 12px; text-align: center;">
+                    <div style="font-size: 2rem; margin-bottom: 8px;">&#128214;</div>
+                    <h4 style="color: var(--navy);">Documentacion</h4>
+                    <p style="color: var(--gray); font-size: 0.85rem;">README.md con badges, tablas y guia de instalacion</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="footer">
+    <p>British Airways Forage Data Science Simulation - Task 2</p>
+    <p style="opacity: 0.7; font-size: 0.85rem;">Metodologia CRISP-ML | Ciclo de Vida del Machine Learning | ETL | EDA | Clasificacion</p>
+    <p style="opacity: 0.7; font-size: 0.85rem;">Desarrollado por Feibert Guzman</p>
+</div>
+
+</body>
+</html>
